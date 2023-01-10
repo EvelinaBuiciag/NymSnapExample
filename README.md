@@ -15,9 +15,11 @@ Before you begin, make sure you have the following installed:
 
 \* *Please note: MetaMask Flask is experimental preview software. Please do not use your existing secret recovery phrase or keys with Flask. It is recommended that you create a new SRP for testing with Flask.*
 ### 
-nvm use 16 
+
 
 ```Shell
+nvm use 16 
+
 yarn install
 
 yarn build
