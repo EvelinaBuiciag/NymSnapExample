@@ -51,6 +51,8 @@
     "node": ">=16.0.0"
   },
   "dependencies": {
-    "@metamask/snap-types": "^0.23.0"
+    "@metamask/abi-utils": "^1.1.1",
+    "@metamask/snap-types": "^0.23.0",
+    "@metamask/utils": "^3.4.1"
   }
 }
