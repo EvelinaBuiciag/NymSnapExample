@@ -1,53 +1,47 @@
 <!doctype html>
 <html>
-  <head>
-    <title>Hello, Snaps!</title>
-    <link rel="icon" type="image/svg" href="./images/icon.svg"/>
+  </head>
+    <title>NYM Snap</title>
+    <link rel="icon" type="image/svg" href="./images/iconwhite.svg"/>
   </head>
 
   <body>
-    <h1>Hello, Snaps!</h1>
-    <details>
-      <summary>Instructions</summary>
-      <ul>
-        <li>First, click "Connect". Then, try out the other buttons!</li>
-        <li>Please note that:</li>
-        <ul>
-          <li>
-            The <code>snap.manifest.json</code> and <code>package.json</code> must be located in the server root directory..
-          </li>
-          <li>
-            The Snap bundle must be hosted at the location specified by the <code>location</code> field of <code>snap.manifest.json</code>.
-          </li>
-        </ul>
-      </ul>
-    </details>
+    <h1>NYM Snap</h1>
     <br/>
 
-    <button class="connect">Connect</button>
-    <button class="sendHello">Send Hello</button>
+    <button id="connectButton">Connect</button>
+    <button id="sendMessagge">Send Message</button>
+
+    <div>
+      <p>Account address</p>
+      <pre id="getAccountsResult"></pre>
+    </div>
   </body>
 
   <script>
     const snapId = `local:${window.location.href}`;
 
-    const connectButton = document.querySelector('button.connect')
-    const sendButton = document.querySelector('button.sendHello')
+    const onboardButton = document.getElementById('connectButton');
+    const getAccountsResult = document.getElementById('getAccountsResult');
+    const sendMessaggeButton = document.getElementById('sendMessagge');
 
     connectButton.addEventListener('click', connect)
-    sendButton.addEventListener('click', send)
+    sendMessagge.addEventListener('click', send)
 
-    // here we get permissions to interact with and install the snap
     async function connect () {
-      await ethereum.request({
+      try {
+      const results = await ethereum.request({
         method: 'wallet_enable',
         params: [{
           wallet_snap: { [snapId]: {} },
         }]
       })
+      getAccountsResult.innerHTML=results.accounts[0] || 'Not able to get accounts';
+    } catch (error) {
+      console.error(error);
     }
-
-    // here we call the snap's "hello" method
+    }
+   
     async function send () {
       try {
         const response = await ethereum.request({
@@ -56,6 +50,8 @@
             method: 'hello'
           }]
         })
+        console.log(response);
+
       } catch (err) {
         console.error(err)
         alert('Problem happened: ' + err.message || err)
