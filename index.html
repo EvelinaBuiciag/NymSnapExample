@@ -1,7 +1,7 @@
 <!doctype html>
 <html>
   </head>
-    <title>NYM Snap</title>
+    <title>NYM Snap POC</title>
     <link rel="icon" type="image/svg" href="./images/iconwhite.svg"/>
   </head>
 
@@ -9,49 +9,91 @@
     <h1>NYM Snap</h1>
     <br/>
 
-    <button id="connectButton">Connect</button>
-    <button id="sendMessagge">Send Hello</button>
-
+    <button class="connect">Connect Metamask Flask Wallet</button>
+    <button id="sendMessagge">Send Hello Messagge</button>
+    <button class="sendTransaction">SendTransaction</button>
     <div>
       <p>Account address</p>
       <pre id="getAccountsResult"></pre>
     </div>
+    <div>
+      <p>Send Hello Messagge response</p>
+      <pre id="getHelloResponse"></pre>
+    </div>
+    <div>
+      <p>Send transaction response</p>
+      <pre id="getResultTransaction"></pre>
+    </div>
+  </div>
   </body>
 
   <script>
     const snapId = `local:${window.location.href}`;
 
-    const onboardButton = document.getElementById('connectButton');
+    const connectButton = document.querySelector('button.connect')
     const getAccountsResult = document.getElementById('getAccountsResult');
-    const sendMessaggeButton = document.getElementById('sendMessagge');
+    const sendMessaggeButton = document.querySelector('button.sendMessagge');
+    const getSendHelloResponse = document.getElementById('getHelloResponse')
+    const sendTransactionButton = document.querySelector('button.sendTransaction')
+    const getTransactResultElement = document.getElementById('getResultTransaction')
 
     connectButton.addEventListener('click', connect)
     sendMessagge.addEventListener('click', send)
+    sendTransactionButton.addEventListener('click', sendTransaction)
+    
 
     async function connect () {
       try {
-      const results = await ethereum.request({
+      const connectResults = await ethereum.request({
         method: 'wallet_enable',
         params: [{
           wallet_snap: { [snapId]: {} },
         }]
       })
-      getAccountsResult.innerHTML=results.accounts[0] || 'Not able to get accounts';
+      getAccountsResult.innerHTML=connectResults.accounts[0] || 'Not able to get accounts';
     } catch (error) {
       console.error(error);
     }
     }
    
+    async function sendTransaction() {
+      try {
+        const transactionResponse = await ethereum.request({
+          method: 'eth_sendTransaction',
+          params: [
+          {
+          from: '0x8b637ea92712F9f6559e0fCbb66e305aefCe2fB9',
+          to: '0x8b637ea92712F9f6559e0fCbb66e305aefCe2fB9',
+          value: '10000000000000',
+          gasPrice: '0x09184e72a00',
+          gas: '0x5208',
+        },
+          ],
+        })
+        getTransactResultElement.innerHTML= `Transaction Response: ${JSON.stringify(
+          transactionResponse,
+          null,
+          2
+        )}`;
+      } catch (err) {
+        console.error(err)
+        alert('Problem happened: ' + err.message || err)
+      }
+    }
+
     async function send () {
       try {
-        const response = await ethereum.request({
+        const helloResponse = await ethereum.request({
           method: 'wallet_invokeSnap',
           params: [snapId, {
             method: 'hello'
           }]
         })
-        console.log(response);
-
+        getSendHelloResponse.innerHTML=(`Hello message was sent: ${JSON.stringify(
+          helloResponse,
+          null,
+          2
+        )}`);
       } catch (err) {
         console.error(err)
         alert('Problem happened: ' + err.message || err)
