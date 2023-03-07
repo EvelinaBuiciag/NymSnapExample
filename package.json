@@ -59,7 +59,7 @@
     "@metamask/key-tree": "^6.1.0",
     "@metamask/snap-types": "^0.23.0",
     "@metamask/snaps-browserify-plugin": "^0.27.1",
-    "@metamask/utils": "^3.4.1",
+    "@metamask/utils": "^5.0.0",
     "@nymproject/sdk": "^1.1.4"
   }
 }
